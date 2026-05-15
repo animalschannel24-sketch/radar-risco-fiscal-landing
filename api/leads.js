@@ -22,10 +22,10 @@ module.exports = async (req, res) => {
     });
   }
 
-  try {
-    const { nome, email, whatsapp, empresa, perfil, dor, origem, timestamp } = req.body || {};
+    try {
+    const { nome, whatsapp, origem, timestamp } = req.body || {};
 
-    if (!nome || !email || !whatsapp || !empresa || !perfil) {
+    if (!nome || !whatsapp) {
       return res.status(400).json({
         ok: false,
         message: 'Campos obrigatórios ausentes.'
@@ -34,11 +34,7 @@ module.exports = async (req, res) => {
 
     console.log('Novo lead recebido:', {
       nome,
-      email,
       whatsapp,
-      empresa,
-      perfil,
-      dor: dor || '',
       origem: origem || 'landing-radar-risco-fiscal',
       timestamp: timestamp || new Date().toISOString()
     });
@@ -47,8 +43,7 @@ module.exports = async (req, res) => {
       ok: true,
       message: 'Lead recebido com sucesso.'
     });
-  } catch (error) {
-    return res.status(500).json({
+  } catch (error) {    return res.status(500).json({
       ok: false,
       message: 'Erro interno ao processar lead.'
     });
