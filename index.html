@@ -1,1 +1,575 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Radar de Risco Fiscal | Lista inicial para escritórios contábeis</title>
+  <meta name="description" content="Uma camada de orquestração entre escritório contábil e cliente para reduzir retrabalho, atrasos e risco operacional." />
+  <style>
+    :root{
+      --bg:#f7f6f2;
+      --surface:#ffffff;
+      --surface-2:#f3f0ec;
+      --text:#1f1d19;
+      --muted:#6f6a63;
+      --line:#ddd7cf;
+      --primary:#0f6b6f;
+      --primary-dark:#0c5255;
+      --accent:#fff4df;
+      --success:#2d6a2d;
+      --danger:#9a3c2b;
+      --radius:18px;
+      --shadow:0 14px 40px rgba(31,29,25,.08);
+      --max:1120px;
+    }
 
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: Arial, Helvetica, sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      line-height:1.55;
+    }
+
+    a{text-decoration:none;color:inherit}
+    .container{width:min(var(--max), calc(100% - 32px)); margin:0 auto}
+    .topbar{
+      position:sticky; top:0; z-index:20;
+      backdrop-filter: blur(10px);
+      background:rgba(247,246,242,.88);
+      border-bottom:1px solid rgba(0,0,0,.05);
+    }
+    .topbar-inner{
+      display:flex; align-items:center; justify-content:space-between;
+      min-height:72px; gap:16px;
+    }
+    .brand{
+      font-weight:700; letter-spacing:.2px;
+      display:flex; align-items:center; gap:10px;
+    }
+    .brand-badge{
+      width:12px; height:12px; border-radius:999px; background:var(--primary);
+      box-shadow:0 0 0 8px rgba(15,107,111,.10);
+    }
+
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center;
+      min-height:46px; padding:0 18px;
+      border-radius:999px; border:1px solid transparent;
+      font-weight:700; cursor:pointer;
+      transition:.2s ease;
+    }
+    .btn-primary{
+      background:var(--primary); color:#fff;
+    }
+    .btn-primary:hover{background:var(--primary-dark)}
+    .btn-secondary{
+      border-color:var(--line); background:#fff;
+    }
+    .btn-secondary:hover{background:#faf8f5}
+
+    .hero{
+      padding:64px 0 42px;
+    }
+    .hero-grid{
+      display:grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap:28px;
+      align-items:stretch;
+    }
+    .hero-copy, .hero-card, .section-card, .form-card, .faq-item{
+      background:var(--surface);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+    }
+    .hero-copy{
+      padding:42px;
+    }
+    .eyebrow{
+      display:inline-block;
+      padding:8px 12px;
+      border-radius:999px;
+      background:var(--accent);
+      color:#7a5713;
+      font-size:13px;
+      font-weight:700;
+      margin-bottom:18px;
+    }
+    h1{
+      font-size:clamp(34px, 5vw, 58px);
+      line-height:1.02;
+      margin:0 0 18px;
+      max-width:11ch;
+    }
+    .hero-copy p{
+      font-size:18px;
+      color:var(--muted);
+      margin:0 0 24px;
+      max-width:58ch;
+    }
+    .hero-actions{
+      display:flex; flex-wrap:wrap; gap:12px;
+      margin-bottom:22px;
+    }
+    .hero-points{
+      display:grid; gap:10px; padding:0; margin:0;
+      list-style:none;
+    }
+    .hero-points li{
+      padding-left:28px; position:relative; color:var(--text);
+    }
+    .hero-points li::before{
+      content:"•";
+      position:absolute; left:10px; top:0; color:var(--primary); font-weight:700;
+    }
+
+    .hero-card{
+      padding:28px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      background:linear-gradient(180deg, #ffffff 0%, #f8fbfb 100%);
+    }
+    .mini-label{
+      font-size:13px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted);
+      margin-bottom:14px;
+    }
+    .metric{
+      display:grid; gap:14px;
+    }
+    .metric-box{
+      background:var(--surface-2);
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:16px;
+    }
+    .metric-box strong{
+      display:block; font-size:28px; margin-bottom:4px;
+    }
+    .metric-box span{
+      color:var(--muted); font-size:14px;
+    }
+    .risk{
+      display:flex; gap:10px; margin-top:16px;
+    }
+    .risk span{
+      flex:1; text-align:center; padding:12px 8px; border-radius:12px; font-weight:700; font-size:14px;
+    }
+    .risk .ok{background:#e7f4e7; color:var(--success)}
+    .risk .warn{background:#fff2d8; color:#8a6200}
+    .risk .bad{background:#f8e2dd; color:var(--danger)}
+
+    section{
+      padding:18px 0;
+    }
+    .section-head{
+      margin:0 0 18px;
+    }
+    .section-head h2{
+      font-size:clamp(28px, 3vw, 40px);
+      margin:0 0 10px;
+    }
+    .section-head p{
+      margin:0; color:var(--muted); max-width:70ch;
+    }
+
+    .grid-3{
+      display:grid;
+      grid-template-columns:repeat(3, 1fr);
+      gap:18px;
+    }
+    .section-card{
+      padding:24px;
+    }
+    .section-card h3{
+      margin:0 0 10px; font-size:22px;
+    }
+    .section-card p{
+      margin:0 0 12px; color:var(--muted);
+    }
+    .section-card ul{
+      margin:0; padding-left:18px; color:var(--text);
+    }
+
+    .split{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:18px;
+    }
+
+    .proof{
+      display:grid;
+      grid-template-columns:1.1fr .9fr;
+      gap:18px;
+    }
+
+    .quote{
+      font-size:22px;
+      line-height:1.35;
+      margin:0 0 12px;
+    }
+
+    .form-wrap{
+      padding:28px 0 70px;
+    }
+    .form-grid{
+      display:grid;
+      grid-template-columns: .95fr 1.05fr;
+      gap:18px;
+      align-items:start;
+    }
+    .form-card{
+      padding:26px;
+    }
+    .stack{display:grid; gap:14px}
+    label{
+      display:grid; gap:8px; font-weight:700; font-size:14px;
+    }
+    input, select, textarea{
+      width:100%;
+      min-height:48px;
+      border-radius:12px;
+      border:1px solid var(--line);
+      background:#fff;
+      padding:12px 14px;
+      font:inherit;
+      color:var(--text);
+    }
+    textarea{min-height:110px; resize:vertical}
+    .small{
+      font-size:13px; color:var(--muted);
+    }
+    .notice{
+      margin-top:12px;
+      padding:12px 14px;
+      border-radius:12px;
+      display:none;
+      font-size:14px;
+    }
+    .notice.ok{display:block; background:#e8f6ea; color:#245c24}
+    .notice.err{display:block; background:#fae7e3; color:#7f2f21}
+
+    .faq{
+      display:grid; gap:14px;
+    }
+    .faq-item{
+      padding:20px;
+    }
+    .faq-item h3{
+      margin:0 0 8px; font-size:18px;
+    }
+    .faq-item p{
+      margin:0; color:var(--muted);
+    }
+
+    footer{
+      padding:28px 0 50px;
+      color:var(--muted);
+      font-size:14px;
+    }
+
+    @media (max-width: 980px){
+      .hero-grid, .grid-3, .split, .proof, .form-grid{
+        grid-template-columns:1fr;
+      }
+      .hero-copy, .hero-card{
+        padding:24px;
+      }
+      h1{max-width:none}
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <div class="brand">
+        <span class="brand-badge"></span>
+        <span>Radar de Risco Fiscal</span>
+      </div>
+      <a class="btn btn-secondary" href="#formulario">Quero participar</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <span class="eyebrow">Lista inicial para escritórios contábeis</span>
+          <h1>Menos caos entre escritório e cliente. Menos multa idiota. Mais prova de valor.</h1>
+          <p>
+            O Radar de Risco Fiscal é uma camada de orquestração entre escritório contábil e empresário
+            para organizar tarefas, documentos, pendências e risco operacional sem substituir o sistema contábil.
+          </p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#formulario">Quero entrar no grupo piloto</a>
+            <a class="btn btn-secondary" href="#como-funciona">Ver como funciona</a>
+          </div>
+          <ul class="hero-points">
+            <li>Tarefas rastreáveis por cliente, prazo e status.</li>
+            <li>Histórico claro do que foi pedido, quando foi pedido e se houve resposta.</li>
+            <li>Visão simples de multas, juros e retrabalho gerados por atraso ou desorganização.</li>
+          </ul>
+        </div>
+
+        <aside class="hero-card">
+          <div>
+            <div class="mini-label">Exemplo de visão do cliente</div>
+            <div class="metric">
+              <div class="metric-box">
+                <strong>R$ 4.280</strong>
+                <span>Em multas e juros acumulados no ano</span>
+              </div>
+              <div class="metric-box">
+                <strong>11 eventos</strong>
+                <span>Atrasos, documentos errados ou falta de resposta</span>
+              </div>
+              <div class="metric-box">
+                <strong>Cliente em atenção</strong>
+                <span>Histórico de pendências com impacto operacional</span>
+              </div>
+            </div>
+          </div>
+          <div class="risk">
+            <span class="ok">Baixo</span>
+            <span class="warn">Médio</span>
+            <span class="bad">Alto</span>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="como-funciona">
+      <div class="container">
+        <div class="section-head">
+          <h2>Como funciona no MVP</h2>
+          <p>
+            Sem virar ERP contábil. Sem prometer apuração. Sem complicação desnecessária.
+            A proposta é organizar a ponte escritório-cliente e dar visibilidade ao custo da desorganização.
+          </p>
+        </div>
+
+        <div class="grid-3">
+          <article class="section-card">
+            <h3>1. Tarefas e documentos</h3>
+            <p>O escritório cria solicitações por cliente com data limite, tipo de item e status.</p>
+            <ul>
+              <li>Pedidos deixam de ficar perdidos no WhatsApp.</li>
+              <li>O cliente responde em um lugar só.</li>
+              <li>Os anexos ficam organizados por competência.</li>
+            </ul>
+          </article>
+
+          <article class="section-card">
+            <h3>2. Radar de risco</h3>
+            <p>O escritório registra eventos de multa, retrabalho, atraso ou erro operacional.</p>
+            <ul>
+              <li>Total de multas e juros no ano.</li>
+              <li>Ocorrências por tipo de problema.</li>
+              <li>Termômetro simples de risco operacional.</li>
+            </ul>
+          </article>
+
+          <article class="section-card">
+            <h3>3. Calendário mastigado</h3>
+            <p>O empresário vê apenas o que depende dele, em linguagem clara, sem siglas técnicas.</p>
+            <ul>
+              <li>O que enviar.</li>
+              <li>Até quando enviar.</li>
+              <li>O que já foi respondido ou está pendente.</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container split">
+        <article class="section-card">
+          <h3>Para o escritório contábil</h3>
+          <p>
+            Menos incêndio operacional, menos retrabalho e mais documentação da responsabilidade
+            quando o atraso nasce do lado do cliente.
+          </p>
+          <ul>
+            <li>Menos mensagem solta e cobrança repetida.</li>
+            <li>Mais organização por cliente e prazo.</li>
+            <li>Mais argumento consultivo para retenção e diferenciação.</li>
+          </ul>
+        </article>
+
+        <article class="section-card">
+          <h3>Para o empresário</h3>
+          <p>
+            Um lugar simples para enxergar o que precisa mandar ao contador,
+            até quando, e quanto dinheiro já foi perdido por desorganização.
+          </p>
+          <ul>
+            <li>Mais clareza do que fazer.</li>
+            <li>Menos susto com multa e juros inúteis.</li>
+            <li>Menos discussão baseada em memória e percepção.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <div class="container proof">
+        <article class="section-card">
+          <h3>O que este produto não faz</h3>
+          <ul>
+            <li>Não apura imposto.</li>
+            <li>Não gera SPED, DCTF, ECF, eSocial ou obrigação oficial.</li>
+            <li>Não substitui o ERP ou sistema contábil do escritório.</li>
+            <li>Não envia arquivo para órgão público.</li>
+          </ul>
+        </article>
+
+        <article class="section-card">
+          <p class="quote">
+            “Não é ERP contábil. É a camada de orquestração que evita que o caos entre cliente e escritório vire multa, retrabalho e perda de valor.”
+          </p>
+          <p class="small">
+            Estamos abrindo uma lista inicial para escritórios contábeis que queiram validar essa proposta em conversa rápida ou piloto assistido.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section class="form-wrap" id="formulario">
+      <div class="container form-grid">
+        <div class="form-card">
+          <div class="section-head">
+            <h2>Participe da lista inicial</h2>
+            <p>
+              Se você tem um escritório contábil e quer reduzir retrabalho, atrasos e risco operacional
+              na comunicação com clientes, deixe seus dados.
+            </p>
+          </div>
+
+          <div class="faq">
+            <div class="faq-item">
+              <h3>Quem deve se cadastrar?</h3>
+              <p>Escritórios contábeis, sócios, gestores e líderes operacionais que sentem dor real na ponte com clientes.</p>
+            </div>
+            <div class="faq-item">
+              <h3>O produto já está pronto?</h3>
+              <p>Não. Esta página existe para validar a demanda, conversar com interessados e selecionar possíveis escritórios piloto.</p>
+            </div>
+            <div class="faq-item">
+              <h3>O que acontece depois?</h3>
+              <p>Você entra na lista inicial e pode ser chamado para uma conversa curta de diagnóstico e validação.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-card">
+          <form id="leadForm" class="stack">
+            <label>
+              Nome
+              <input type="text" name="nome" placeholder="Seu nome" required />
+            </label>
+
+            <label>
+              E-mail
+              <input type="email" name="email" placeholder="voce@empresa.com" required />
+            </label>
+
+            <label>
+              WhatsApp
+              <input type="text" name="whatsapp" placeholder="(11) 99999-9999" required />
+            </label>
+
+            <label>
+              Empresa
+              <input type="text" name="empresa" placeholder="Nome do escritório" required />
+            </label>
+
+            <label>
+              Perfil
+              <select name="perfil" required>
+                <option value="">Selecione</option>
+                <option value="socio">Sócio(a)</option>
+                <option value="gestor">Gestor(a)</option>
+                <option value="lider-operacional">Líder operacional</option>
+                <option value="contador">Contador(a)</option>
+                <option value="outro">Outro</option>
+              </select>
+            </label>
+
+            <label>
+              Qual é a principal dor hoje?
+              <textarea name="dor" placeholder="Ex.: cliente atrasa documentos, manda coisa errada, responde tarde, gera multa e retrabalho..."></textarea>
+            </label>
+
+            <button class="btn btn-primary" type="submit">Quero participar da lista inicial</button>
+            <p class="small">Ao enviar, você demonstra interesse em participar da validação inicial do projeto.</p>
+            <div id="formNotice" class="notice"></div>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      Radar de Risco Fiscal — validação inicial de produto para escritórios contábeis.
+    </div>
+  </footer>
+
+  <script>
+    const WEBHOOK_URL = "COLE_AQUI_O_SEU_ENDPOINT";
+
+    const form = document.getElementById("leadForm");
+    const notice = document.getElementById("formNotice");
+
+    form.addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const formData = new FormData(form);
+      const payload = {
+        nome: formData.get("nome")?.toString().trim(),
+        email: formData.get("email")?.toString().trim(),
+        whatsapp: formData.get("whatsapp")?.toString().trim(),
+        empresa: formData.get("empresa")?.toString().trim(),
+        perfil: formData.get("perfil")?.toString().trim(),
+        dor: formData.get("dor")?.toString().trim(),
+        origem: "landing-radar-risco-fiscal",
+        timestamp: new Date().toISOString()
+      };
+
+      if (!payload.nome || !payload.email || !payload.whatsapp || !payload.empresa || !payload.perfil) {
+        notice.className = "notice err";
+        notice.textContent = "Preencha os campos obrigatórios antes de enviar.";
+        return;
+      }
+
+      if (!WEBHOOK_URL || WEBHOOK_URL.includes("COLE_AQUI_O_SEU_ENDPOINT")) {
+        notice.className = "notice err";
+        notice.textContent = "O formulário ainda não está conectado. Falta configurar o endpoint do backend.";
+        return;
+      }
+
+      try {
+        const res = await fetch(WEBHOOK_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        if (!res.ok) {
+          throw new Error("Falha ao enviar");
+        }
+
+        form.reset();
+        notice.className = "notice ok";
+        notice.textContent = "Cadastro enviado com sucesso. Obrigado pelo interesse.";
+      } catch (err) {
+        notice.className = "notice err";
+        notice.textContent = "Não foi possível enviar agora. Verifique se o endpoint aceita POST em JSON e se o CORS está habilitado.";
+      }
+    });
+  </script>
+</body>
+</html>
