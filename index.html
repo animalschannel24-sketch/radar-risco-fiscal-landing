@@ -510,19 +510,15 @@
 
       const formData = new FormData(form);
       const payload = {
-        nome: formData.get("nome")?.toString().trim(),
-        email: formData.get("email")?.toString().trim(),
-        whatsapp: formData.get("whatsapp")?.toString().trim(),
-        empresa: formData.get("empresa")?.toString().trim(),
-        perfil: formData.get("perfil")?.toString().trim(),
-        dor: formData.get("dor")?.toString().trim(),
-        origem: "landing-radar-risco-fiscal",
-        timestamp: new Date().toISOString()
-      };
+  nome: formData.get("nome")?.toString().trim(),
+  whatsapp: formData.get("whatsapp")?.toString().trim(),
+  origem: "landing-radar-risco-fiscal",
+  timestamp: new Date().toISOString()
+};
 
-      if (!payload.nome || !payload.email || !payload.whatsapp || !payload.empresa || !payload.perfil) {
-        notice.className = "notice err";
-        notice.textContent = "Preencha os campos obrigatórios antes de enviar.";
+if (!payload.nome || !payload.whatsapp) {
+  notice.className = "notice err";
+  notice.textContent = "Preencha os campos obrigatórios antes de enviar.";
         return;
       }
 
