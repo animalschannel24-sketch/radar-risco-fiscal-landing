@@ -466,47 +466,28 @@
 
         <div class="form-card">
           <form id="leadForm" class="stack">
-            <label>
-              Nome
-              <input type="text" name="nome" placeholder="Seu nome" required />
-            </label>
+  <label>
+    Nome
+    <input type="text" name="nome" placeholder="Seu nome" required />
+  </label>
 
-            <label>
-              E-mail
-              <input type="email" name="email" placeholder="voce@empresa.com" required />
-            </label>
+  <label>
+    WhatsApp
+    <input
+      type="tel"
+      name="whatsapp"
+      placeholder="11999999999"
+      inputmode="numeric"
+      maxlength="11"
+      pattern="[0-9]{10,11}"
+      required
+    />
+  </label>
 
-            <label>
-              WhatsApp
-              <input type="text" name="whatsapp" placeholder="(11) 99999-9999" required />
-            </label>
-
-            <label>
-              Empresa
-              <input type="text" name="empresa" placeholder="Nome do escritório" required />
-            </label>
-
-            <label>
-              Perfil
-              <select name="perfil" required>
-                <option value="">Selecione</option>
-                <option value="socio">Sócio(a)</option>
-                <option value="gestor">Gestor(a)</option>
-                <option value="lider-operacional">Líder operacional</option>
-                <option value="contador">Contador(a)</option>
-                <option value="outro">Outro</option>
-              </select>
-            </label>
-
-            <label>
-              Qual é a principal dor hoje?
-              <textarea name="dor" placeholder="Ex.: cliente atrasa documentos, manda coisa errada, responde tarde, gera multa e retrabalho..."></textarea>
-            </label>
-
-            <button class="btn btn-primary" type="submit">Quero participar da lista inicial</button>
-            <p class="small">Ao enviar, você demonstra interesse em participar da validação inicial do projeto.</p>
-            <div id="formNotice" class="notice"></div>
-          </form>
+  <button class="btn btn-primary" type="submit">Quero participar da lista inicial</button>
+  <p class="small">Ao enviar, você demonstra interesse em participar da validação inicial do projeto.</p>
+  <div id="formNotice" class="notice"></div>
+</form> 
         </div>
       </div>
     </section>
